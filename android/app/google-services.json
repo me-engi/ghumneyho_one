@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "389701148400",
+    "project_id": "ghumneyho",
+    "storage_bucket": "ghumneyho.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:389701148400:android:57ad8db0fffca73c07ac35",
+        "android_client_info": {
+          "package_name": "com.example.toursandtravels"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "389701148400-0pvfcgr5a8mgv4o4gdst8982g6ehla4r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.toursandtravels",
+            "certificate_hash": "426dee1a26155adccc3dfa82bba2eb8043e2dd85"
+          }
+        },
+        {
+          "client_id": "389701148400-ks6rg037l7ebu30kp79cm2936qgomm6v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8wWBzJP1hWjQadhrKIG75HCRbMDiPfdE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "389701148400-ks6rg037l7ebu30kp79cm2936qgomm6v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "389701148400-7q4aefv2703r7uqa54r3p7gg6gk9ms2q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.toursandtravels"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
