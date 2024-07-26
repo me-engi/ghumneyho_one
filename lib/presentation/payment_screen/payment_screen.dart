@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -14,12 +12,14 @@ import '../../constants/const_colors.dart';
 import '../../widgets/custom_dialog.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen(
-      {super.key,
-      required this.tourId,
-      required this.tourName,
-      required this.tourImage,
-      required this.tourLocation});
+  const PaymentScreen({
+    Key? key,
+    required this.tourId,
+    required this.tourName,
+    required this.tourImage,
+    required this.tourLocation,
+  }) : super(key: key);
+
   final String tourId;
   final String tourName;
   final String tourImage;
@@ -30,38 +30,46 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  var paymentController = Get.put(PaymentController());
-  var tourinfoController = Get.put(TourController());
-  final couponController = TextEditingController();
-  final formkey = GlobalKey<FormState>();
+  final paymentController = Get.put(PaymentController());
+  final tourinfoController = Get.put(TourController());
+  final TextEditingController couponController = TextEditingController();
+  final fetchPaymentController = Get.put(FetchPaymentController());
+  final formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPaymentController.fetchFinalPrice(widget.tourId);
+  }
+
   exitDialog() {
     return showDialog(
-        barrierDismissible: true,
-        barrierColor: ConstColors.textColor.withOpacity(0.1),
-        context: context,
-        builder: (context) => customDialogueWithCancel(
-              backgroundColor: ConstColors.backgroundColor,
-              content: "Are you sure you want cancel booking?",
-              dismissBtnTitle: "Yes",
-              onClick: () {
-                // toursControlleradd.clearAllList();
-                // toursControlleradd.initialAddOn();
-                // toursControlleradd.passengerCount.value = 1;
-                Get.back();
-                Get.back();
-              },
-              dismissBtnTitleStyle: TextStyle(
-                  color: ConstColors.textColor,
-                  fontSize: 69.sp,
-                  fontWeight: FontWeight.bold),
-              cancelBtnStyle: TextStyle(
-                  color: ConstColors.primaryColor,
-                  fontSize: 69.sp,
-                  fontWeight: FontWeight.bold),
-              cancelBtn: 'No',
-              onCancelClick: () => Navigator.pop(context),
-              title: "Hold on!",
-            ));
+      barrierDismissible: true,
+      barrierColor: ConstColors.textColor.withOpacity(0.1),
+      context: context,
+      builder: (context) => customDialogueWithCancel(
+        backgroundColor: ConstColors.backgroundColor,
+        content: "Are you sure you want cancel booking?",
+        dismissBtnTitle: "Yes",
+        onClick: () {
+          Get.back();
+          Get.back();
+        },
+        dismissBtnTitleStyle: TextStyle(
+          color: ConstColors.textColor,
+          fontSize: 69.sp,
+          fontWeight: FontWeight.bold,
+        ),
+        cancelBtnStyle: TextStyle(
+          color: ConstColors.primaryColor,
+          fontSize: 69.sp,
+          fontWeight: FontWeight.bold,
+        ),
+        cancelBtn: 'No',
+        onCancelClick: () => Navigator.pop(context),
+        title: "Hold on!",
+      ),
+    );
   }
 
   @override
@@ -71,77 +79,83 @@ class _PaymentScreenState extends State<PaymentScreen> {
         return exitDialog();
       },
       child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios_new_rounded,
-                color: ConstColors.textColor,
-              ),
-              onPressed: () {
-                exitDialog();
-              },
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: ConstColors.textColor,
             ),
-            centerTitle: true,
-            title: Text(
-              "Payment",
-              style: getTextTheme().headlineMedium,
-            ),
+            onPressed: () {
+              exitDialog();
+            },
           ),
-          bottomNavigationBar: Obx(
-            () => paymentController.isLoading.value
-                ? SizedBox.shrink()
-                : Container(
-                    width: double.maxFinite,
-                    color: ConstColors.backgroundColor,
-                    padding: EdgeInsets.all(15),
-                    child: Form(
-                      key: formkey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "Coupon Code",
-                            style: getTextTheme().headlineMedium,
-                          ),
-                          Gap(20),
-                          CustomTextFormField(
-                            customText: "Have coupon code",
-                            controller: couponController,
-                            validator: (value) {
-                              if (value == "") {
-                                return "Please enter coupon";
+          centerTitle: true,
+          title: Text(
+            "Payment",
+            style: getTextTheme().headlineMedium,
+          ),
+        ),
+        bottomNavigationBar: Obx(
+          () => fetchPaymentController.isLoading.value
+              ? SizedBox.shrink()
+              : Container(
+                  width: double.maxFinite,
+                  color: ConstColors.backgroundColor,
+                  padding: EdgeInsets.all(15),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Coupon Code",
+                          style: getTextTheme().headlineMedium,
+                        ),
+                        Gap(20),
+                        CustomTextFormField(
+                          customText: "Have coupon code",
+                          controller: couponController,
+                          validator: (value) {
+                            if (value == "") {
+                              return "Please enter coupon";
+                            }
+                            return null;
+                          },
+                          inputFormatters: [],
+                          onChanged: (value) {},
+                          iconss: TextButton(
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                fetchPaymentController.fetchFinalPrice(
+                                  widget.tourId,
+                                  coupon: couponController.text,
+                                );
                               }
-                              return null;
                             },
-                            inputFormatters: [],
-                            onChanged: (value) {},
-                            iconss: TextButton(
-                              onPressed: () {
-                                if (!formkey.currentState!.validate()) {}
-                              },
-                              child: Text(
-                                'APPLY',
-                                style: getTextTheme()
-                                    .displaySmall!
-                                    .copyWith(decoration: TextDecoration.none),
-                              ),
+                            child: Text(
+                              'APPLY',
+                              style: getTextTheme()
+                                  .displaySmall!
+                                  .copyWith(decoration: TextDecoration.none),
                             ),
                           ),
-                          Gap(20),
-                          Container(
-                            // height: 100,
+                        ),
+                        Gap(20),
+                        Obx(() {
+                          final payment = fetchPaymentController.finalPayment.value;
+                          return Container(
                             width: double.maxFinite,
                             padding: EdgeInsets.all(15),
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Colors.grey)),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.grey),
+                            ),
                             child: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'SubTotal',
@@ -152,7 +166,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                               fontWeight: FontWeight.bold),
                                     ),
                                     Text(
-                                      '₹100',
+                                      '₹${payment.initialPrice}',
                                       style: getTextTheme()
                                           .headlineSmall!
                                           .copyWith(
@@ -163,11 +177,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 ),
                                 Gap(10),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'GST',
+                                      'GST & Platform charges',
                                       style: getTextTheme()
                                           .headlineSmall!
                                           .copyWith(
@@ -175,7 +188,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                               fontWeight: FontWeight.bold),
                                     ),
                                     Text(
-                                      '₹100',
+                                      '₹${payment.additionalCharges}',
                                       style: getTextTheme()
                                           .headlineSmall!
                                           .copyWith(
@@ -186,31 +199,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 ),
                                 Gap(10),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Platform charges',
-                                      style: getTextTheme()
-                                          .headlineSmall!
-                                          .copyWith(
-                                              color: Color(0xFF5B5B5B),
-                                              fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      '₹100',
-                                      style: getTextTheme()
-                                          .headlineSmall!
-                                          .copyWith(
-                                              color: Color(0xFF5B5B5B),
-                                              fontWeight: FontWeight.normal),
-                                    )
-                                  ],
-                                ),
-                                Gap(10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'You saved',
@@ -221,7 +210,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                               fontWeight: FontWeight.bold),
                                     ),
                                     Text(
-                                      '₹100',
+                                      '₹${payment.discount}',
                                       style: getTextTheme()
                                           .headlineSmall!
                                           .copyWith(
@@ -232,8 +221,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 ),
                                 Gap(10),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'Total',
@@ -244,7 +232,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                               fontWeight: FontWeight.bold),
                                     ),
                                     Text(
-                                      '₹100',
+                                      '₹${payment.finalPrice}',
                                       style: getTextTheme()
                                           .headlineSmall!
                                           .copyWith(
@@ -267,28 +255,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       ],
                                     ),
                                   ),
-                                  child:
-                                      // Obx(() => Center(
-                                      //       child: false
-                                      //           ? CircularProgressIndicator(
-                                      //               color: Colors.white,
-                                      //             )
-                                      //           :
-                                      Center(
+                                  child: Center(
                                     child: Text(
-                                      "PAY ₹100",
+                                      "PAY ₹${payment.finalPrice}",
                                       style: getTextTheme().titleMedium,
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                          )
-                        ],
-                      ),
+                          );
+                        })
+                      ],
                     ),
                   ),
-          ),
+                ),
+        ),
           body: Obx(
             () => paymentController.isLoading.value
                 ? Center(

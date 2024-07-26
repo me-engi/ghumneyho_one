@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:toursandtravels/widgets/customDottedlines.dart';
 
 
 import '../../../constants/const_colors.dart';
 import '../../../constants/custom_textstyle.dart';
-import '../../../widgets/customDottedlines.dart';
 
 
 class TourShimmer extends StatefulWidget {

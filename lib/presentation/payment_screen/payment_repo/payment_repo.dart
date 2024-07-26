@@ -1,18 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:toursandtravels/constants/const_colors.dart';
+import 'package:toursandtravels/presentation/payment_screen/payment_model.dart';
 import 'package:toursandtravels/repo/api.dart';
 
-import '../../../constants/const_colors.dart';
-import '../../../constants/global.dart';
-
 class PaymentRepo {
-  API api = API();
-  GetStorage box = GetStorage();
+  final API _api = API();
+  final GetStorage _box = GetStorage();
+
   Future getBookingPersonDetails() async {
-    var bookingId = await box.read('bookingid');
+    var bookingId = await _box.read('bookingid');
     try {
-      Response response = await api.sendRequest.get(
+      Response response = await _api.sendRequest.get(
         "bookings/$bookingId/persons/",
         options: Options(
           headers: {
@@ -20,23 +20,16 @@ class PaymentRepo {
           },
         ),
       );
-
       return response.data;
     } on DioException catch (e) {
-      if (e.response!.statusCode! >= 400 && e.response!.statusCode! <= 500) {
-        Fluttertoast.showToast(
-            msg: "Something went wrong",
-            backgroundColor: ConstColors.primaryColor,
-            toastLength: Toast.LENGTH_SHORT);
-        rethrow;
-      }
+      _handleError(e);
       rethrow;
     }
   }
 
   Future getAdditionalCharges() async {
     try {
-      Response response = await api.sendRequest.get(
+      Response response = await _api.sendRequest.get(
         "additional-charges/",
         options: Options(
           headers: {
@@ -44,23 +37,16 @@ class PaymentRepo {
           },
         ),
       );
-
       return response.data;
     } on DioException catch (e) {
-      if (e.response!.statusCode! >= 400 && e.response!.statusCode! <= 500) {
-        Fluttertoast.showToast(
-            msg: "Something went wrong",
-            backgroundColor: ConstColors.primaryColor,
-            toastLength: Toast.LENGTH_SHORT);
-        rethrow;
-      }
+      _handleError(e);
       rethrow;
     }
   }
 
   Future getCouponsById(String tourId) async {
     try {
-      Response response = await api.sendRequest.get(
+      Response response = await _api.sendRequest.get(
         "tour/$tourId/apply-coupon/",
         options: Options(
           headers: {
@@ -68,25 +54,22 @@ class PaymentRepo {
           },
         ),
       );
-
       return response.data;
     } on DioException catch (e) {
-      if (e.response!.statusCode! >= 400 && e.response!.statusCode! <= 500) {
-        Fluttertoast.showToast(
-            msg: "Something went wrong",
-            backgroundColor: ConstColors.primaryColor,
-            toastLength: Toast.LENGTH_SHORT);
-        rethrow;
-      }
+      _handleError(e);
       rethrow;
     }
   }
 
-  Future getFinalPrice(String tourId, String coupon) async {
-    //?coupon_code=sunshine
+  Future<Finalpayment> getFinalPrice(String tourId, {String? coupon}) async {
     try {
-      Response response = await api.sendRequest.get(
-        "calculate-final-price/$tourId/$coupon",
+      String endpoint = "calculate-final-price/$tourId/";
+      if (coupon != null && coupon.isNotEmpty) {
+        endpoint += "?coupon_code=$coupon";
+      }
+
+      final response = await _api.sendRequest.get(
+        endpoint,
         options: Options(
           headers: {
             'Content-Type': 'application/json',
@@ -94,16 +77,20 @@ class PaymentRepo {
         ),
       );
 
-      return response.data;
+      return Finalpayment.fromJson(response.data);
     } on DioException catch (e) {
-      if (e.response!.statusCode! >= 400 && e.response!.statusCode! <= 500) {
-        Fluttertoast.showToast(
-            msg: "Something went wrong",
-            backgroundColor: ConstColors.primaryColor,
-            toastLength: Toast.LENGTH_SHORT);
-        rethrow;
-      }
+      _handleError(e);
       rethrow;
+    }
+  }
+
+  void _handleError(DioException e) {
+    if (e.response != null && e.response!.statusCode != null && e.response!.statusCode! >= 400 && e.response!.statusCode! <= 500) {
+      Fluttertoast.showToast(
+        msg: "Something went wrong",
+        backgroundColor: ConstColors.primaryColor,
+        toastLength: Toast.LENGTH_SHORT,
+      );
     }
   }
 }
