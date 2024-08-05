@@ -9,60 +9,30 @@ List<TraindingModel> traindingModelFromJson(String str) => List<TraindingModel>.
 String traindingModelToJson(List<TraindingModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class TraindingModel {
-  int? id;
-  List<TourImage>? tourImages;
-  String? name;
-  String? description;
-  String? prePrice;
-  String? price;
-  int? maxParticipants;
-  bool? isPopular;
-  bool? isTrending;
-  String? included;
-  String? excluded;
+    int? id;
+    String? name;
+    List<String> tourImages;
 
-  TraindingModel({
-    this.id,
-    this.tourImages,
-    this.name,
-    this.description,
-    this.prePrice,
-    this.price,
-    this.maxParticipants,
-    this.isPopular,
-    this.isTrending,
-    this.included,
-    this.excluded,
-  });
+    TraindingModel({
+        required this.id,
+        required this.name,
+        required this.tourImages,
+    });
 
-  factory TraindingModel.fromJson(Map<String, dynamic> json) => TraindingModel(
-    id: json["id"],
-    tourImages: json["tour_images"] == null ? [] : List<TourImage>.from(json["tour_images"]!.map((x) => TourImage.fromJson(x))),
-    name: json["name"],
-    description: json["description"],
-    prePrice: json["pre_price"],
-    price: json["price"],
-    maxParticipants: json["max_participants"],
-    isPopular: json["is_popular"],
-    isTrending: json["is_trending"],
-    included: json["included"],
-    excluded: json["excluded"],
-  );
+    factory TraindingModel.fromJson(Map<String, dynamic> json) => TraindingModel(
+        id: json["id"],
+        name: json["name"],
+        tourImages: List<String>.from(json["tour_images"].map((x) => x)),
+    );
 
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "tour_images": tourImages == null ? [] : List<dynamic>.from(tourImages!.map((x) => x.toJson())),
-    "name": name,
-    "description": description,
-    "pre_price": prePrice,
-    "price": price,
-    "max_participants": maxParticipants,
-    "is_popular": isPopular,
-    "is_trending": isTrending,
-    "included": included,
-    "excluded": excluded,
-  };
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "tour_images": List<dynamic>.from(tourImages.map((x) => x)),
+    };
 }
+
+
 
 class TourImage {
   int? id;

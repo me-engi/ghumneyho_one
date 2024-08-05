@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final popularModel = popularModelFromJson(jsonString);
-
 import 'dart:convert';
 
 List<PopularModel> popularModelFromJson(String str) => List<PopularModel>.from(json.decode(str).map((x) => PopularModel.fromJson(x)));
@@ -9,60 +5,29 @@ List<PopularModel> popularModelFromJson(String str) => List<PopularModel>.from(j
 String popularModelToJson(List<PopularModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class PopularModel {
-  int? id;
-  List<TourImage>? tourImages;
-  String? name;
-  String? description;
-  String? prePrice;
-  String? price;
-  int? maxParticipants;
-  bool? isPopular;
-  bool? isTrending;
-  String? included;
-  String? excluded;
+    int? id;
+    String? name;
+    List<String> tourImages;
 
-  PopularModel({
-    this.id,
-    this.tourImages,
-    this.name,
-    this.description,
-    this.prePrice,
-    this.price,
-    this.maxParticipants,
-    this.isPopular,
-    this.isTrending,
-    this.included,
-    this.excluded,
-  });
+    PopularModel({
+        required this.id,
+        required this.name,
+        required this.tourImages,
+    });
 
-  factory PopularModel.fromJson(Map<String, dynamic> json) => PopularModel(
-    id: json["id"],
-    tourImages: json["tour_images"] == null ? [] : List<TourImage>.from(json["tour_images"]!.map((x) => TourImage.fromJson(x))),
-    name: json["name"],
-    description: json["description"],
-    prePrice: json["pre_price"],
-    price: json["price"],
-    maxParticipants: json["max_participants"],
-    isPopular: json["is_popular"],
-    isTrending: json["is_trending"],
-    included: json["included"],
-    excluded: json["excluded"],
-  );
+    factory PopularModel.fromJson(Map<String, dynamic> json) => PopularModel(
+        id: json["id"],
+        name: json["name"],
+        tourImages: List<String>.from(json["tour_images"].map((x) => x)),
+    );
 
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "tour_images": tourImages == null ? [] : List<dynamic>.from(tourImages!.map((x) => x.toJson())),
-    "name": name,
-    "description": description,
-    "pre_price": prePrice,
-    "price": price,
-    "max_participants": maxParticipants,
-    "is_popular": isPopular,
-    "is_trending": isTrending,
-    "included": included,
-    "excluded": excluded,
-  };
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "tour_images": List<dynamic>.from(tourImages.map((x) => x)),
+    };
 }
+
 
 class TourImage {
   int? id;
@@ -87,3 +52,4 @@ class TourImage {
     "tour": tour,
   };
 }
+

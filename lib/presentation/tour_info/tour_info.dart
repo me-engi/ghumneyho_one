@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -576,14 +577,40 @@ class _TourInfoState extends State<TourInfo> {
                                         }),
                                   ),
                                 ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 11.h, horizontal: 80.w),
-                            child: Text(
-                              toursControlleradd.toursById.description,
-                              style: getTextTheme().headlineSmall,
-                            ),
-                          ),
+                                Gap(10),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 80.w),
+                  child: Text(
+                    'Description',
+                    style: getTextTheme().headlineMedium,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 80.w),
+                  child: Text(
+                    'Ratings',
+                    style: getTextTheme().headlineMedium,
+                  ),
+                ),
+
+
+              ],
+              
+            ),
+            SizedBox(height: 20.h),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 11.h, horizontal: 80.w),
+              child: Text(
+                toursControlleradd.toursById.description,
+                style: getTextTheme().headlineSmall,
+              ),
+            ),
+  
+        
+
+                          
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 0.h, horizontal: 80.w),

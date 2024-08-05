@@ -9,14 +9,14 @@ List<Commentget> commentgetFromJson(String str) => List<Commentget>.from(json.de
 String commentgetToJson(List<Commentget> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Commentget {
-    int id;
-    String user;
-    int userId;
-    int tourId;
-    String tourName;
-    int rating;
-    String comment;
-    DateTime createdAt;
+    int? id;
+    String? user;
+    int? userId;
+    int? tourId;
+    String? tourName;
+    int? rating;
+    String? comment;
+    DateTime? createdAt;
 
     Commentget({
         required this.id,
@@ -48,6 +48,6 @@ class Commentget {
         "tour_name": tourName,
         "rating": rating,
         "comment": comment,
-        "created_at": createdAt.toIso8601String(),
+        "created_at": createdAt!.toIso8601String(),
     };
 }

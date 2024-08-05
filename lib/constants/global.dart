@@ -16,4 +16,6 @@ class Global {
   static const bookingPerson = '/persons/';
   static const socialLogin = 'social-login/';
   static const notification = 'notifications/';
+  static const getcomments = 'comments/';
+  static const postcomments = 'comments/';
 }

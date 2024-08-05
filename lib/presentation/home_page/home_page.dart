@@ -334,7 +334,7 @@ class _HomePageState extends State<HomePage> {
                                     .popularList![index]['tour_images'].isEmpty
                                 ? "https://cdn-icons-png.freepik.com/512/15114/15114626.png"
                                 : homeController.popularList![index]
-                                    ['tour_images'][0]['image']),
+                                    ['tour_images'][0]),
                           ),
                           color: Colors.grey,
                           borderRadius: BorderRadius.circular(20),
@@ -421,7 +421,7 @@ class _HomePageState extends State<HomePage> {
                                       .isEmpty
                                   ? "https://cdn-icons-png.freepik.com/512/15114/15114626.png"
                                   : homeController.traindingModel![index]
-                                      ['tour_images'][0]['image']),
+                                      ['tour_images'][0]),
                             ),
                             color: Colors.grey,
                             borderRadius: BorderRadius.circular(20),
